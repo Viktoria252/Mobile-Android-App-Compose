@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobile.vedroid.compose.R
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
+import kotlinx.serialization.Serializable
 
 //Модель данных
 data class CatalogItem(
