@@ -11,6 +11,7 @@ lifecycleRuntimeKtx = "2.11.0"
 constraintlayoutCompose = "1.1.2"
 materialIconsCore = "1.7.8"
 material3 = "1.4.0"
+recyclerview = "1.4.0"
 
 [libraries]
 # tests
@@ -36,6 +37,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 # added ui
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

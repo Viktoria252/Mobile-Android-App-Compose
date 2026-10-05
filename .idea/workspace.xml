@@ -66,8 +66,33 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9221a3f8-fdc2-4f53-b45f-ef211fbf595a" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="9221a3f8-fdc2-4f53-b45f-ef211fbf595a" name="Changes" comment="laba 2">
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.5.0/kotlin-dsl-plugin-entries/kotlin-dsl-plugin-entries.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.5.0/kotlin-dsl-plugin-entries/kotlin-dsl-plugin-entries.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/1jkb7l205ho52o7hphuw2xn92/candidates.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/configuration-cache/1jkb7l205ho52o7hphuw2xn92/candidates.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/8mci5st4b8kwn58t3uqecdaui/candidates.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/configuration-cache/8mci5st4b8kwn58t3uqecdaui/candidates.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/configuration-cache.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/configuration-cache/configuration-cache.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/ContentFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/fragments/ContentFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/DemoData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/DemoData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/ItemCatalog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/ItemCatalog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/RegistrationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/fragments/RegistrationFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/SettingsFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/fragments/SettingsFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/StartFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/fragments/StartFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,31 +123,32 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Class" />
         <option value="valueResourceFile" />
+        <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="laba3" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Viktoria252"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Viktoria252&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Viktoria252/Mobile-Android-App-Compose.git",
-    "accountId": "12d28a1e-46da-41ba-81f4-c61f489cf105"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Viktoria252/Mobile-Android-App-Compose.git&quot;,
+    &quot;accountId&quot;: &quot;12d28a1e-46da-41ba-81f4-c61f489cf105&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="com.mobile.vedroid.compose.StartActivityKt.PreviewFragmentStart" />
   </component>
@@ -148,7 +174,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "#1 on laba2",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/a798311/AndroidStudioProjects/RentApplication",
     "project.structure.last.edited": "Dependencies",
@@ -164,6 +190,12 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/res/catalog" />
+    </key>
+    <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
+      <recent name="com.mobile.vedroid.compose.ui.compose.network" />
+      <recent name="com.mobile.vedroid.compose.ui.compose.fragments" />
+      <recent name="com.mobile.vedroid.compose.ui.compose.model" />
+      <recent name="com.mobile.vedroid.compose.ui.compose" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -302,6 +334,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Android App.StartActivity" />
+        <item itemvalue="Android App.StartActivity" />
       </list>
     </recent_temporary>
   </component>
@@ -313,6 +346,15 @@
       <option name="presentableId" value="Default" />
       <updated>1790009985138</updated>
     </task>
+    <task id="LOCAL-00001" summary="laba 2">
+      <option name="closed" value="true" />
+      <created>1791046998080</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1791046998080</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -326,7 +368,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="lab1" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -341,19 +383,36 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="laba1" />
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="laba 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="laba 2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/SettingsFragment.kt</url>
+          <line>200</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/mobile/vedroid/compose/ui/compose/SettingsFragment.kt</url>
+          <line>268</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.mobile.vedroid.compose">
           <value>
-            <CheckInfo lastCheckTimestamp="1790141216204" />
+            <CheckInfo lastCheckTimestamp="1791178779152" />
           </value>
         </entry>
         <entry key="com.mobile.vedroid.compose.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1790141216191" />
+            <CheckInfo lastCheckTimestamp="1791178779124" />
           </value>
         </entry>
         <entry key="com.mobile.vedroid.kt">

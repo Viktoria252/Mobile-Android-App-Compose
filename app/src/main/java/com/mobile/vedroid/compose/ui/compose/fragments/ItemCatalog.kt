@@ -2,7 +2,6 @@ package com.mobile.vedroid.compose.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -38,7 +36,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mobile.vedroid.compose.R
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
 
 //Модель данных
@@ -48,30 +45,9 @@ data class CatalogItem(
     val category: String,
     val description: String,
     val pricePerDay: Int,
-    val status: ItemStatus,
     val imageRes: Int? = null // если null — рисуем иконку категории
 )
 
-enum class ItemStatus {
-    AVAILABLE,   // Доступно
-    RENTED,      // Занято
-    BOOKED       // Забронировано
-}
-
-/**
- * Цвет и текст для статуса — визуальное оформление разных категорий статуса.
- */
-private fun statusColor(status: ItemStatus): Color = when (status) {
-    ItemStatus.AVAILABLE -> Color(0xFF4CAF50) // зелёный
-    ItemStatus.RENTED    -> Color(0xFFF44336) // красный
-    ItemStatus.BOOKED    -> Color(0xFFFF9800) // оранжевый
-}
-
-private fun statusLabel(status: ItemStatus): String = when (status) {
-    ItemStatus.AVAILABLE -> "Доступно"
-    ItemStatus.RENTED    -> "Занято"
-    ItemStatus.BOOKED    -> "Забронировано"
-}
 
 /**
  * Иконка для категории — визуальное оформление разных типов оборудования.
@@ -161,9 +137,6 @@ fun ItemCatalog(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-
-                    // Статус — цветной бейдж
-                    StatusBadge(status = item.status)
                 }
             }
         }
@@ -203,36 +176,9 @@ private fun ItemImage(item: CatalogItem) {
     }
 }
 
-/**
- * Цветной бейдж статуса (доступно/занято/забронировано).
- */
-@Composable
-private fun StatusBadge(status: ItemStatus) {
-    val color = statusColor(status)
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(color.copy(alpha = 0.15f))
-            .border(
-                width = 1.dp,
-                color = color,
-                shape = RoundedCornerShape(6.dp)
-            )
-            .padding(horizontal = 8.dp, vertical = 3.dp)
-    ) {
-        Text(
-            text = statusLabel(status),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = color
-        )
-    }
-}
-
 // Preview для проверки карточки
 
-@Preview(showBackground = true, name = "Доступно")
+@Preview(showBackground = true, name = "Камера")
 @Composable
 private fun ItemCatalogPreviewAvailable() {
     RentCamTheme {
@@ -242,14 +188,13 @@ private fun ItemCatalogPreviewAvailable() {
                 name = "Sony A7 III",
                 category = "Камера",
                 description = "Полнокадровая беззеркальная камера с объективом 28-70mm f/3.5-5.6",
-                pricePerDay = 2500,
-                status = ItemStatus.AVAILABLE
+                pricePerDay = 2500
             )
         )
     }
 }
 
-@Preview(showBackground = true, name = "Занято")
+@Preview(showBackground = true, name = "Объектив")
 @Composable
 private fun ItemCatalogPreviewRented() {
     RentCamTheme {
@@ -259,25 +204,7 @@ private fun ItemCatalogPreviewRented() {
                 name = "Canon EF 50mm f/1.8 STM",
                 category = "Объектив",
                 description = "Светосильный фикс-объектив, идеален для портретной съёмки",
-                pricePerDay = 500,
-                status = ItemStatus.RENTED
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Забронировано")
-@Composable
-private fun ItemCatalogPreviewBooked() {
-    RentCamTheme {
-        ItemCatalog(
-            item = CatalogItem(
-                id = 3,
-                name = "Manfrotto MT055XPRO3",
-                category = "Штатив",
-                description = "Алюминиевый штатив с центральной колонкой и быстросъёмной площадкой",
-                pricePerDay = 700,
-                status = ItemStatus.BOOKED
+                pricePerDay = 500
             )
         )
     }
