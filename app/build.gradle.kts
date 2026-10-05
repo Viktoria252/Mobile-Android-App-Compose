@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.recyclerview)
 
 
     // tests
@@ -70,4 +71,15 @@ dependencies {
 
     // navigation
     implementation("androidx.navigation:navigation-compose:2.10.2")
+
+    implementation("io.ktor:ktor-client-core:3.3.1")
+
+    // Ktor client to Android
+    implementation("io.ktor:ktor-client-android:3.3.1")
+    implementation("io.ktor:ktor-client-logging:3.3.1")
+
+    // Json serialization in Ktor
+    implementation("io.ktor:ktor-client-serialization:3.3.1")
+    implementation("io.ktor:ktor-client-content-negotiation:3.3.1")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.1")
 }
