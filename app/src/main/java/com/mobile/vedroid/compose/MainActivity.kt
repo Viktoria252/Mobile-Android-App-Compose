@@ -107,5 +107,3 @@ class MainActivity : ComponentActivity() {
         override fun onStop()     { super.onStop();     Log.d("MainActivity", "ON_STOP") }
         override fun onRestart()  { super.onRestart();  Log.d("MainActivity", "ON_RESTART") }
 }
-
-//route посмотреть

@@ -36,19 +36,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mobile.vedroid.compose.network.ItemRequest
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
-
-//Модель данных
-data class CatalogItem(
-    val id: Int,
-    val name: String,
-    val category: String,
-    val description: String,
-    val pricePerDay: Int,
-    val imageRes: Int? = null // если null — рисуем иконку категории
-)
-
-
 /**
  * Иконка для категории — визуальное оформление разных типов оборудования.
  */
@@ -65,7 +54,7 @@ private fun categoryIcon(category: String): ImageVector = when (category.lowerca
  */
 @Composable
 fun ItemCatalog(
-    item: CatalogItem,
+    item: ItemRequest,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -147,7 +136,7 @@ fun ItemCatalog(
  * Изображение товара или fallback-иконка категории.
  */
 @Composable
-private fun ItemImage(item: CatalogItem) {
+private fun ItemImage(item: ItemRequest) {
     val shape = RoundedCornerShape(12.dp)
 
     Box(
@@ -159,7 +148,7 @@ private fun ItemImage(item: CatalogItem) {
     ) {
         if (item.imageRes != null) {
             Image(
-                painter = painterResource(item.imageRes),
+                imageVector = categoryIcon(item.category),
                 contentDescription = item.name,
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop
@@ -183,12 +172,12 @@ private fun ItemImage(item: CatalogItem) {
 private fun ItemCatalogPreviewAvailable() {
     RentCamTheme {
         ItemCatalog(
-            item = CatalogItem(
-                id = 1,
+            item = ItemRequest(
+                id = "1",
                 name = "Sony A7 III",
                 category = "Камера",
                 description = "Полнокадровая беззеркальная камера с объективом 28-70mm f/3.5-5.6",
-                pricePerDay = 2500
+                pricePerDay = 2500.00
             )
         )
     }
@@ -199,12 +188,12 @@ private fun ItemCatalogPreviewAvailable() {
 private fun ItemCatalogPreviewRented() {
     RentCamTheme {
         ItemCatalog(
-            item = CatalogItem(
-                id = 2,
+            item = ItemRequest(
+                id = "2",
                 name = "Canon EF 50mm f/1.8 STM",
                 category = "Объектив",
                 description = "Светосильный фикс-объектив, идеален для портретной съёмки",
-                pricePerDay = 500
+                pricePerDay = 500.00
             )
         )
     }

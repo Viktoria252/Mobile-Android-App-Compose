@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,31 +46,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.mobile.vedroid.compose.ui.compose.CatalogItem
+import com.google.gson.annotations.SerializedName
+import com.mobile.vedroid.compose.network.ItemRequest
+import com.mobile.vedroid.compose.network.RetrofitClient
 import com.mobile.vedroid.compose.ui.compose.ItemCatalog
 import com.mobile.vedroid.compose.ui.compose.demoCatalog
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import kotlin.String
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
-public fun ContentFragment(
+fun ContentFragment(
     onSettingsClick: () -> Unit = {}
 ) {
-    LifecycleEventEffect(Lifecycle.Event.ON_CREATE)  { Log.d("StartFragment", "ON_CREATE") }
-    LifecycleEventEffect(Lifecycle.Event.ON_START)   { Log.d("StartFragment", "ON_START") }
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME)  { Log.d("StartFragment", "ON_RESUME") }
-    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE)   { Log.d("StartFragment", "ON_PAUSE") }
-    LifecycleEventEffect(Lifecycle.Event.ON_STOP)    { Log.d("StartFragment", "ON_STOP") }
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) { Log.d("StartFragment", "ON_CREATE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_START) { Log.d("StartFragment", "ON_START") }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { Log.d("StartFragment", "ON_RESUME") }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { Log.d("StartFragment", "ON_PAUSE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { Log.d("StartFragment", "ON_STOP") }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Список карточек как изменяемое состояние
-    val items = remember { mutableStateListOf<CatalogItem>().apply { addAll(demoCatalog()) } }
-
+    val items = remember { mutableStateListOf<ItemRequest>() }
     // Флаги для загрузки
     var isLoading by remember { mutableStateOf(false) }
     var loadPage by remember { mutableStateOf(1) }
@@ -121,10 +126,49 @@ public fun ContentFragment(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when {
-                // если список пуст
-                items.isEmpty() -> {
-                    EmptyState(
+            LaunchedEffect(Unit) {
+                RetrofitClient.apiService.getItems().enqueue(
+                    object : Callback<List<ItemRequest>> {
+
+                        override fun onFailure(call: Call<List<ItemRequest>>, t: Throwable) {
+                            Log.e("ContentFragment", "Ошибка сети: ${t.message}", t)
+                            showMessage("Ошибка загрузки")
+                        }
+
+                        override fun onResponse(
+                            call: Call<List<ItemRequest>>,
+                            response: Response<List<ItemRequest>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val list = response.body().orEmpty()
+                                items.clear()
+                                items.addAll(list)
+                                Log.d("ContentFragment", "Загружено ${list.size}")
+                            } else {
+                                Log.e("ContentFragment", "HTTP ${response.code()}")
+                            }
+                        }
+                    }
+                )
+            }
+            ShowItemItems(items)
+        }
+    }
+}
+
+    @Composable
+    private fun ShowItemItems(items: MutableList<ItemRequest>) {
+        // Флаги для загрузки
+        var isLoading by remember { mutableStateOf(false) }
+        var loadPage by remember { mutableStateOf(1) }
+
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        fun showMessage(msg: String) {
+            scope.launch { snackbarHostState.showSnackbar(msg) }
+        }
+        if (items.isEmpty()) {
+            EmptyState(
                         onRestoreClick = {
                             // Заглушка: имитируем восстановление из копии
                             items.addAll(demoCatalog())
@@ -135,84 +179,83 @@ public fun ContentFragment(
                             showMessage("Данные загружены")
                         }
                     )
-                }
-
-                //если есть карточки — показываем список
-                else -> {
-                    LazyColumn(
+        } else {
+            LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
-                        // Заголовок перед списком
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                            ) {
-                                Text(
-                                    text = "Всего позиций: ${items.size}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
+                // Заголовок перед списком
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = "Всего позиций: ${items.size}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
 
-                        // Карточки
-                        items(
-                            items = items,
-                            key = { it.id } // ключ нужен для корректной анимации и переиспользования
-                        ) { item ->
-                            ItemCatalog(
-                                item = item,
-                                onClick = {
-                                    Log.d("ContentActivity", "click item: ${item.name}")
-                                    showMessage("Открыто: ${item.name}")
-                                }
-                            )
-                        }
+                // Карточки
+                items(
+                    items = items,
+                    key = { it.id } // ключ нужен для корректной анимации и переиспользования
+                ) { item ->
+                    ItemRequest(
+                        id = item.id,
+                        name = item.name,
+                        category = item.category,
+                        description = item.description,
+                        pricePerDay = item.pricePerDay,
+                        imageRes = item.imageRes
+//                        onClick = {
+//                            Log.d("ContentActivity", "click item: ${item.name}")
+//                            showMessage("Открыто: ${item.name}")
+//                        }
+                    )
+                }
 
-                        // Индикатор загрузки внизу списка
-                        if (isLoading) {
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
-                                }
-                            }
-                        }
-
-                        // Кнопка "Загрузить ещё" в самом низу
-                        item {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            OutlinedButton(
-                                onClick = {
-                                    isLoading = true
-                                    scope.launch {
-                                        delay(800)
-                                        loadPage++
-                                        items.addAll(demoCatalog(page = loadPage))
-                                        isLoading = false
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                            ) {
-                                Text("Загрузить ещё")
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
+                // Индикатор загрузки внизу списка
+                if (isLoading) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
                         }
                     }
+                }
+
+                // Кнопка "Загрузить ещё" в самом низу
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = {
+                            isLoading = true
+                            scope.launch {
+                                delay(800)
+                                loadPage++
+                                items.addAll(demoCatalog(page = loadPage))
+                                isLoading = false
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text("Загрузить ещё")
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
-}
 
 @Composable
 private fun EmptyState(
