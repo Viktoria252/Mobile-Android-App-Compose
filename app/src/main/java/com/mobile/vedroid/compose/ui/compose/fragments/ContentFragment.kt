@@ -46,9 +46,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.annotations.SerializedName
 import com.mobile.vedroid.compose.network.ItemRequest
 import com.mobile.vedroid.compose.network.RetrofitClient
+import com.mobile.vedroid.compose.ui.EquipmentViewModel
 import com.mobile.vedroid.compose.ui.compose.ItemCatalog
 import com.mobile.vedroid.compose.ui.compose.demoCatalog
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
@@ -63,199 +66,122 @@ import kotlin.String
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun ContentFragment(
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    vm: EquipmentViewModel = viewModel()
 ) {
-    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) { Log.d("StartFragment", "ON_CREATE") }
-    LifecycleEventEffect(Lifecycle.Event.ON_START) { Log.d("StartFragment", "ON_START") }
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { Log.d("StartFragment", "ON_RESUME") }
-    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { Log.d("StartFragment", "ON_PAUSE") }
-    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { Log.d("StartFragment", "ON_STOP") }
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) { Log.d("ContentFragment", "ON_CREATE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_START) { Log.d("ContentFragment", "ON_START") }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { Log.d("ContentFragment", "ON_RESUME") }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { Log.d("ContentFragment", "ON_PAUSE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { Log.d("ContentFragment", "ON_STOP") }
 
-    val scope = rememberCoroutineScope()
+    val items by vm.items.collectAsStateWithLifecycle()
+    val isRefreshing by vm.isRefreshing.collectAsStateWithLifecycle()
+    val isLoadingMore by vm.isLoadingMore.collectAsStateWithLifecycle()
+    val hasMore by vm.hasMore.collectAsStateWithLifecycle()
+    val error by vm.error.collectAsStateWithLifecycle()
+
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val items = remember { mutableStateListOf<ItemRequest>() }
-    // Флаги для загрузки
-    var isLoading by remember { mutableStateOf(false) }
-    var loadPage by remember { mutableStateOf(1) }
+    LaunchedEffect(Unit) { vm.loadFirstPage() }
 
-    fun showMessage(msg: String) {
-        scope.launch { snackbarHostState.showSnackbar(msg) }
+    LaunchedEffect(error) {
+        error?.let {
+            snackbarHostState.showSnackbar(it)
+            vm.clearError()
+        }
     }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = "Каталог оборудования",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                },
+                title = { Text("Каталог оборудования") },
                 actions = {
-                    IconButton(onClick = {
-                        isLoading = true
-                        scope.launch {
-                            delay(1000) // имитация сетевой загрузки
-                            loadPage++
-                            items.addAll(demoCatalog(page = loadPage))
-                            isLoading = false
-                            showMessage("Загружено ${items.size} карточек")
-                        }
-                    }) {
+                    IconButton(onClick = { vm.loadFirstPage() }) {
                         Icon(Icons.Default.Refresh, contentDescription = "Обновить")
                     }
                     IconButton(onClick = onSettingsClick) {
                         Icon(Icons.Default.Settings, contentDescription = "Настройки")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
+                }
             )
         }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            LaunchedEffect(Unit) {
-                RetrofitClient.apiService.getItems().enqueue(
-                    object : Callback<List<ItemRequest>> {
-
-                        override fun onFailure(call: Call<List<ItemRequest>>, t: Throwable) {
-                            Log.e("ContentFragment", "Ошибка сети: ${t.message}", t)
-                            showMessage("Ошибка загрузки")
-                        }
-
-                        override fun onResponse(
-                            call: Call<List<ItemRequest>>,
-                            response: Response<List<ItemRequest>>
-                        ) {
-                            if (response.isSuccessful) {
-                                val list = response.body().orEmpty()
-                                items.clear()
-                                items.addAll(list)
-                                Log.d("ContentFragment", "Загружено ${list.size}")
-                            } else {
-                                Log.e("ContentFragment", "HTTP ${response.code()}")
-                            }
-                        }
-                    }
-                )
-            }
-            ShowItemItems(items)
+    ) { padding ->
+        Box(Modifier.fillMaxSize().padding(padding)) {
+            ShowItemItems(
+                items = items,
+                isLoadingMore = isLoadingMore,
+                hasMore = hasMore,
+                onLoadMore = { vm.loadNextPage() },
+                onItemClick = { item ->
+                    Log.d("ContentFragment", "click item: ${item.name}")
+                }
+            )
         }
     }
 }
+@Composable
+private fun ShowItemItems(
+    items: List<ItemRequest>,
+    isLoadingMore: Boolean,
+    hasMore: Boolean,
+    onLoadMore: () -> Unit,
+    onItemClick: (ItemRequest) -> Unit
+) {
+    if (items.isEmpty()) {
+        EmptyState(
+            onRestoreClick = onLoadMore,
+            onRetryClick = onLoadMore
+        )
+        return
+    }
 
-    @Composable
-    private fun ShowItemItems(items: MutableList<ItemRequest>) {
-        // Флаги для загрузки
-        var isLoading by remember { mutableStateOf(false) }
-        var loadPage by remember { mutableStateOf(1) }
-
-        val snackbarHostState = remember { SnackbarHostState() }
-        val scope = rememberCoroutineScope()
-        fun showMessage(msg: String) {
-            scope.launch { snackbarHostState.showSnackbar(msg) }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 8.dp)
+    ) {
+        item {
+            Text(
+                "Всего позиций: ${items.size}",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
-        if (items.isEmpty()) {
-            EmptyState(
-                        onRestoreClick = {
-                            // Заглушка: имитируем восстановление из копии
-                            items.addAll(demoCatalog())
-                            showMessage("Данные восстановлены из резервной копии")
-                        },
-                        onRetryClick = {
-                            items.addAll(demoCatalog())
-                            showMessage("Данные загружены")
-                        }
-                    )
+
+        items(items = items, key = { it.id }) { item ->
+            ItemCatalog(item = item, onClick = { onItemClick(item) })
+        }
+
+        if (isLoadingMore) {
+            item {
+                Box(
+                    Modifier.fillMaxWidth().padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+            }
+        }
+
+        if (hasMore) {
+            item {
+                OutlinedButton(
+                    onClick = onLoadMore,
+                    enabled = !isLoadingMore,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                ) { Text("Загрузить ещё") }
+            }
         } else {
-            LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp)
-                    ) {
-                // Заголовок перед списком
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = "Всего позиций: ${items.size}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                // Карточки
-                items(
-                    items = items,
-                    key = { it.id } // ключ нужен для корректной анимации и переиспользования
-                ) { item ->
-                    ItemRequest(
-                        id = item.id,
-                        name = item.name,
-                        category = item.category,
-                        description = item.description,
-                        pricePerDay = item.pricePerDay,
-                        imageRes = item.imageRes
-//                        onClick = {
-//                            Log.d("ContentActivity", "click item: ${item.name}")
-//                            showMessage("Открыто: ${item.name}")
-//                        }
-                    )
-                }
-
-                // Индикатор загрузки внизу списка
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
-
-                // Кнопка "Загрузить ещё" в самом низу
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = {
-                            isLoading = true
-                            scope.launch {
-                                delay(800)
-                                loadPage++
-                                items.addAll(demoCatalog(page = loadPage))
-                                isLoading = false
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        Text("Загрузить ещё")
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+            item {
+                Text(
+                    "Больше позиций нет",
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
+}
 
 @Composable
 private fun EmptyState(

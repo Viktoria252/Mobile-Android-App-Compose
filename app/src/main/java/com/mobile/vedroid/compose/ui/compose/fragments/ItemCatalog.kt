@@ -1,5 +1,6 @@
 package com.mobile.vedroid.compose.ui.compose
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobile.vedroid.compose.network.ItemRequest
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
+import coil.compose.AsyncImage
+import coil.request.ImageRequest as CoilImageRequest
+import androidx.compose.ui.platform.LocalContext
 /**
  * Иконка для категории — визуальное оформление разных типов оборудования.
  */
@@ -58,6 +63,7 @@ fun ItemCatalog(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    Log.d("ItemImage", "name=${item.name}, imageRes=${item.imageRes}, isBlank=${item.imageRes.isNullOrBlank()}")
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -135,6 +141,7 @@ fun ItemCatalog(
 /**
  * Изображение товара или fallback-иконка категории.
  */
+
 @Composable
 private fun ItemImage(item: ItemRequest) {
     val shape = RoundedCornerShape(12.dp)
@@ -146,15 +153,22 @@ private fun ItemImage(item: ItemRequest) {
             .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
-        if (item.imageRes != null) {
-            Image(
-                imageVector = categoryIcon(item.category),
+        if (!item.imageRes.isNullOrBlank()) {
+            // Картинка по URL через Coil
+            AsyncImage(
+                model = CoilImageRequest.Builder(LocalContext.current)
+                    .data(item.imageRes)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = item.name,
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                // Пока грузится или при ошибке — показываем иконку категории
+                error = painterResource(android.R.drawable.ic_menu_gallery),
+                placeholder = null
             )
         } else {
-            // Иконка категории вместо картинки
+            // Fallback — иконка категории
             Icon(
                 imageVector = categoryIcon(item.category),
                 contentDescription = item.category,

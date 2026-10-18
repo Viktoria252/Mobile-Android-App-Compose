@@ -11,4 +11,6 @@ data class ItemRequest (
     @SerializedName("dailyprice")
     val pricePerDay: Double,
     @SerializedName("image")
-    val imageRes: String? = null) {}
+    val imageRes: String?=null
+
+) {}
