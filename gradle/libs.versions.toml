@@ -11,6 +11,12 @@ lifecycleRuntimeKtx = "2.11.0"
 constraintlayoutCompose = "1.1.2"
 materialIconsCore = "1.7.8"
 material3 = "1.4.0"
+recyclerview = "1.4.0"
+retrofit = "3.0.0"
+converterGson = "3.0.0"
+gson = "2.14.0"
+coil = "2.7.0"
+
 
 [libraries]
 # tests
@@ -36,6 +42,13 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 # added ui
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+# retrofit + gson converter
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+# coil
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

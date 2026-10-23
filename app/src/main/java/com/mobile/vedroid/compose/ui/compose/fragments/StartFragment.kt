@@ -1,15 +1,9 @@
 package com.mobile.vedroid.compose
 
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,12 +20,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -40,129 +35,25 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 
-class StartActivity : ComponentActivity() {
-
-    // Launcher для получения результата из RegistrationActivity
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-
-    private val userNameState = mutableStateOf("")
-    private val userEmailState = mutableStateOf("")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("StartActivity", "onCreate")
-        enableEdgeToEdge()
-
-        val prefs = getSharedPreferences(PrefsKeys.PREFS_NAME, MODE_PRIVATE)
-        userNameState.value = prefs.getString(PrefsKeys.USER_NAME, "") ?: ""
-        userEmailState.value = prefs.getString(PrefsKeys.USER_EMAIL, "") ?: ""
-
-        // Регистрируем launcher ДО setContent
-        resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val name = result.data?.getStringExtra("USER_NAME").orEmpty()
-                val email = result.data?.getStringExtra("USER_EMAIL").orEmpty()
-                Log.d("StartActivity", "registration result: $email")
-                userNameState.value = name
-                userEmailState.value = email
-                // Сохраняем в SharedPreferences для следующих запусков
-                prefs.edit()
-                    .putString(PrefsKeys.USER_NAME, name)
-                    .putString(PrefsKeys.USER_EMAIL, email)
-                    .apply()
-            }
-        }
-
-        setContent {
-            RentCamTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    StartScreen(
-                        userName = userNameState.value,
-                        savedEmail = userEmailState.value,
-                        onLoginClick = { email ->
-                            Log.d("StartActivity", "click: login ($email)")
-                            val intent = Intent(this, ContentActivity::class.java)
-                            intent.putExtra("USER_EMAIL", email)
-                            startActivity(intent)
-                        },
-                        onRegisterClick = {
-                            Log.d("StartActivity", "click: registration")
-                            resultLauncher.launch(
-                                Intent(this, RegistrationActivity::class.java)
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-    // Логирование жизненного цикла
-    override fun onStart() {
-        super.onStart()
-        Log.d("StartActivity", "onStart")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("StartActivity", "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("StartActivity", "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("StartActivity", "onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("StartActivity", "onDestroy")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("StartActivity", "onRestart")
-    }
-}
-
-
-@Preview(showSystemUi = true, name = "Light")
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
-fun StartScreenPreviewLight() {
-    RentCamTheme(darkTheme = false) {
-        StartScreen()
-    }
-}
-
-@Preview(showSystemUi = true, name = "Dark")
-@Composable
-fun StartScreenPreviewDark() {
-    RentCamTheme(darkTheme = true) {
-        StartScreen()
-    }
-}
-
-@Composable
-fun StartScreen(
+public fun StartFragment(
     userName: String = "",
     savedEmail: String = "",
     onLoginClick: (String) -> Unit = {},
     onRegisterClick: () -> Unit = {}
-) {
+    ) {
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE)  { Log.d("StartFragment", "ON_CREATE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_START)   { Log.d("StartFragment", "ON_START") }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME)  { Log.d("StartFragment", "ON_RESUME") }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE)   { Log.d("StartFragment", "ON_PAUSE") }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP)    { Log.d("StartFragment", "ON_STOP") }
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -314,5 +205,23 @@ fun StartScreen(
                 Text("Зарегистрироваться", modifier = Modifier.padding(vertical = 8.dp))
             }
         }
+    }
+}
+
+@Preview(
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "Light"
+)
+@Preview(
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark"
+)
+
+@Composable
+private fun PreviewFragmentStart(){
+    RentCamTheme (dynamicColor = false) {
+        StartFragment()
     }
 }
