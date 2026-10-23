@@ -6,7 +6,4 @@ object PrefsKeys {
     const val USER_EMAIL = "user_email"
     const val USER_GENDER = "user_gender"
     const val USER_AGE = "user_age"
-    const val THEME_DARK = "theme_dark"
-    const val FONT_SCALE = "font_scale"
-    const val LANGUAGE = "language"
 }

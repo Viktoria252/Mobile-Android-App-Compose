@@ -10,6 +10,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.TextUnit
 
 private val LightColorScheme = lightColorScheme(
 
@@ -93,11 +96,42 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Light
 )
 
+private fun scaledTypography(base: Typography, scale: Float): Typography {
+    if (scale == 1f) return base
+
+    fun TextStyle.scaled(): TextStyle {
+        val newSize =
+            if (fontSize != TextUnit.Unspecified) fontSize * scale else fontSize
+        val newLine =
+            if (lineHeight != TextUnit.Unspecified) lineHeight * scale else lineHeight
+        return copy(fontSize = newSize, lineHeight = newLine)
+    }
+
+    return Typography(
+        displayLarge   = base.displayLarge.scaled(),
+        displayMedium  = base.displayMedium.scaled(),
+        displaySmall   = base.displaySmall.scaled(),
+        headlineLarge  = base.headlineLarge.scaled(),
+        headlineMedium = base.headlineMedium.scaled(),
+        headlineSmall  = base.headlineSmall.scaled(),
+        titleLarge     = base.titleLarge.scaled(),
+        titleMedium    = base.titleMedium.scaled(),
+        titleSmall     = base.titleSmall.scaled(),
+        bodyLarge      = base.bodyLarge.scaled(),
+        bodyMedium     = base.bodyMedium.scaled(),
+        bodySmall      = base.bodySmall.scaled(),
+        labelLarge     = base.labelLarge.scaled(),
+        labelMedium    = base.labelMedium.scaled(),
+        labelSmall     = base.labelSmall.scaled()
+    )
+}
+
 
 
 @Composable
 fun RentCamTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    fontScale: Float = 1f,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -114,7 +148,7 @@ fun RentCamTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = scaledTypography(Typography, fontScale),
         content = content
     )
 }

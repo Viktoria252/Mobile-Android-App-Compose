@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import com.mobile.vedroid.compose.ui.EquipmentViewModel
 import com.mobile.vedroid.compose.ui.compose.PrefsKeys
 import com.mobile.vedroid.compose.ui.theme.RentCamTheme
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : ComponentActivity() {
     private val userNameState = mutableStateOf("")
@@ -38,11 +41,19 @@ class MainActivity : ComponentActivity() {
         userEmailState.value = prefs.getString(PrefsKeys.USER_EMAIL, "") ?: ""
 
         setContent {
-            RentCamTheme {
+            val dataStore = remember { SettingsDataStore(applicationContext) }
+            val darkTheme by dataStore.dark_theme.collectAsStateWithLifecycle(initialValue = false)
+            val fontScale by dataStore.fontScale.collectAsStateWithLifecycle(initialValue = 1f)
+            RentCamTheme(
+                darkTheme = darkTheme,
+                fontScale = fontScale,
+                dynamicColor = false
+            )  {
                 val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
                 val bottomPadding =
                     WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
                 val navController = rememberNavController()
+                val equipmentVm: EquipmentViewModel = viewModel()
                 Box(
                     Modifier
                         .fillMaxSize()
@@ -76,14 +87,14 @@ class MainActivity : ComponentActivity() {
                                         .apply()
                                     userNameState.value = name
                                     userEmailState.value = email
-                                    //navController.navigate(MainActivityRoutes.Start(name, email))
                                     navController.popBackStack()
                                 },
-                                onBackClick = { navController.navigate(navController.popBackStack()) }
+                                onBackClick = { navController.popBackStack() }
                             )
                         }
                         composable<MainActivityRoutes.Content> {
                             ContentFragment(
+                                vm = equipmentVm,
                                 onSettingsClick = {
                                     navController.navigate(MainActivityRoutes.Settings){
                                         launchSingleTop = true }
@@ -93,7 +104,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<MainActivityRoutes.Settings> {
                             SettingsFragment(
-                                onBackClick = { navController.navigate(navController.popBackStack()) }
+                                vm = equipmentVm,
+                                onBackClick = { navController.popBackStack() }
                             )
                         }
                     }

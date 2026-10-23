@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class EquipmentViewModel : ViewModel() {
 
@@ -39,7 +42,7 @@ class EquipmentViewModel : ViewModel() {
                 nextOffset = list.size
                 _hasMore.value = list.size == PAGE_SIZE
             } catch (e: Exception) {
-                _error.value = e.message ?: "Ошибка загрузки"
+                _error.value = classifyError(e)
             } finally {
                 _isRefreshing.value = false
             }
@@ -56,7 +59,7 @@ class EquipmentViewModel : ViewModel() {
                 nextOffset += list.size
                 _hasMore.value = list.size == PAGE_SIZE
             } catch (e: Exception) {
-                _error.value = e.message ?: "Ошибка загрузки"
+                _error.value = classifyError(e)
             } finally {
                 _isLoadingMore.value = false
             }
@@ -64,6 +67,12 @@ class EquipmentViewModel : ViewModel() {
     }
 
     fun clearError() { _error.value = null }
+
+    private fun classifyError(e: Exception): String = when (e) {
+        is UnknownHostException -> "Нет подключения к Интернету"
+        is ConnectException, is SocketTimeoutException -> "Не удается подключиться к хосту"
+        else -> "Ошибка подключения"
+    }
 
     companion object {
         const val PAGE_SIZE = 4
